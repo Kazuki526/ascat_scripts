@@ -121,7 +121,7 @@ $pm->wait_all_children;
 
 system("perl ~/git/ascat_scripts/hg38_ascat/annotate_ascat110_38.pl");
 
-print "perfectly done\n";
+print "perfectly done ascat\n";
 exit;
 
 sub header2hash ( $ ){
