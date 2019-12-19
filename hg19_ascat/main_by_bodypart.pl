@@ -104,11 +104,11 @@ close TCL;
 close NCL;
 close FILE;
 
-system('sh ~/git/ascat_script/hg19_ascat/make_norm_gw6_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/scripts/split_lrr_baf.R norm_lrr_baf.txt norm_cel_list.txt $pwd");
+system('sh ~/git/ascat_scripts/hg19_ascat/make_norm_gw6_lrrbaf.sh 2>&1 > /dev/null');
+system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/scripts/split_lrr_baf.R norm_lrr_baf.txt norm_cel_list.txt $pwd");
 
-system('sh ~/git/ascat_script/hg19_ascat/scripts/make_tumor_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/scripts/split_lrr_baf.R tumor_lrr_baf.txt tumor_cel_list.txt $pwd");
+system('sh ~/git/ascat_scripts/hg19_ascat/scripts/make_tumor_lrrbaf.sh 2>&1 > /dev/null');
+system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/scripts/split_lrr_baf.R tumor_lrr_baf.txt tumor_cel_list.txt $pwd");
 
 my %sex=();
 open(SEX,"file_sex");
@@ -131,7 +131,7 @@ foreach my $subdir(@subdir){
 		}
 #fork start
 		$pm->start and next;
-		system("Rscript --slave ~/git/ascat_script/hg19_ascat/scripts/2sample_ascat.R $subdir $pwd $sex 2>&1 > /dev/null");
+		system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/scripts/2sample_ascat.R $subdir $pwd $sex 2>&1 > /dev/null");
 		print "doing $subdir ascat\n";
 		unlink "ascat/$subdir/normal.LogR.txt";
 		unlink "ascat/$subdir/normal.BAF.txt";
@@ -141,7 +141,7 @@ foreach my $subdir(@subdir){
 		$pm->finish;
 }
 
-system("perl ~/git/ascat_script/hg19_ascat/scripts/annotate_ascat.pl");
+system("perl ~/git/ascat_scripts/hg19_ascat/scripts/annotate_ascat.pl");
 
 exit;
 

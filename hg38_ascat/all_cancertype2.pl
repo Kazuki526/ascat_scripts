@@ -10,6 +10,6 @@ foreach my $cancertype (@cancertype){
 		my $dir = "$ascat_dir/$cancertype/cel";
 		mkdir "$dir";
 		chdir $dir;
-		system("perl $ENV{HOME}/git/ascat_script/hg38_ascat/main2.pl 2>&1|tee -a out38.log");
-		if(`grep \"perfectly done ascat\" out.log` !~ /./){die "######### stop at $cancertype ##########\n";}
+		system("perl $ENV{HOME}/git/ascat_scripts/hg38_ascat/main2.pl 2>&1|tee -a out38.log");
+		if(`grep \"perfectly done ascat\" out38.log` !~ /./){die "######### stop at $cancertype ##########\n";}
 }

@@ -16,8 +16,8 @@ my $uc_ct = uc $ct;
 
 $normjson= "$ct"."_cna_norm.json";
 $tumorjson="$ct"."_cna_tumor.json";
-#system("cat ~/git/ascat_script/hg19_ascat/project_cna_norm.json|sed s/cancertype/$uc_ct/ >$normjson");
-#system("cat ~/git/ascat_script/hg19_ascat/project_cna_tumor.json|sed s/cancertype/$uc_ct/ >$tumorjson");
+#system("cat ~/git/ascat_scripts/hg19_ascat/project_cna_norm.json|sed s/cancertype/$uc_ct/ >$normjson");
+#system("cat ~/git/ascat_scripts/hg19_ascat/project_cna_tumor.json|sed s/cancertype/$uc_ct/ >$tumorjson");
 
 $normmanifest= "gdc_manifest.$ct". "_norm_cel.tsv";
 $tumormanifest="gdc_manifest.$ct". "_tumor_cel.tsv";
@@ -83,11 +83,11 @@ close TUMOR;
 my $pwdn=`pwd`;chomp $pwdn;
 if($pwd ne $pwdn){die "ERROR stopped at line 148 by_project_main.pl\n";}
 
-system('sh ~/git/ascat_script/hg38_ascat/make_norm_gw6_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R norm_lrr_baf_hg38.txt norm_cel_list.txt $pwd");
+system('sh ~/git/ascat_scripts/hg38_ascat/make_norm_gw6_lrrbaf.sh 2>&1 > /dev/null');
+system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/split_lrr_baf.R norm_lrr_baf_hg38.txt norm_cel_list.txt $pwd");
 
-system('sh ~/git/ascat_script/hg38_ascat/make_tumor_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R tumor_lrr_baf_hg38.txt tumor_cel_list.txt $pwd");
+system('sh ~/git/ascat_scripts/hg38_ascat/make_tumor_lrrbaf.sh 2>&1 > /dev/null');
+system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/split_lrr_baf.R tumor_lrr_baf_hg38.txt tumor_cel_list.txt $pwd");
 
 my %sex=();
 open(SEX,"file_sex");
@@ -110,7 +110,7 @@ foreach my $subdir(@subdir){
 		}
 #fork start
 		$pm->start and next;
-		system("Rscript --slave ~/git/ascat_script/hg19_ascat/2sample_ascat.R $subdir $pwd $sex >/dev/null 2>&1");
+		system("Rscript --slave ~/git/ascat_scripts/hg19_ascat/2sample_ascat.R $subdir $pwd $sex >/dev/null 2>&1");
 		print "doing $subdir ascat\n";
 		unlink "ascat/$subdir/normal.LogR.txt";
 		unlink "ascat/$subdir/normal.BAF.txt";
@@ -123,7 +123,7 @@ foreach my $subdir(@subdir){
 }
 $pm->wait_all_children;
 
-system("perl ~/git/ascat_script/hg38_ascat/annotate_ascat110_38.pl");
+system("perl ~/git/ascat_scripts/hg38_ascat/annotate_ascat110_38.pl");
 
 print "perfectly done $uc_ct ASCAT\n";
 exit;
