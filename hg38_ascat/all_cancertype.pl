@@ -8,5 +8,5 @@ foreach my $cancertype (@cancertype){
 		print "#################################################### $cancertype ####################################################\n";
 		my $dir = "$ascat_dir/$cancertype/cel";
 		chdir $dir;
-		system("perl $ENV{HOME}/git/ascat_script/hg38_ascat/main.pl 2>&1|tee -a out.log");
+		system("perl $ENV{HOME}/git/ascat_script/hg38_ascat/main.pl 2>&1|tee -a out38.log");
 }

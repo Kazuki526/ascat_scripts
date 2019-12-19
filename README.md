@@ -1,4 +1,4 @@
 # ascat_scripts
-At first, ascat was done on Hg19 (dir: hg19_ascat)
+最初にhg19_scriptにて実行
 
-hg38_ascat scripts change it to hg38
+referenceをhg38に変えるためにhg38_scriptを実行

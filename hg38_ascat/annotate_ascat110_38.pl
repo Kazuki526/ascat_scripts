@@ -2,7 +2,7 @@
 use warnings;
 use strict;
 
-open(GFF,"/Users/kaz/git/driver_genes/onlytop110/grch37_top_driver110.gff");
+open(GFF,"/Users/kaz/git/driver_genes/onlytop110/grch38_top_driver110.gff");
 my %gff=(); #gff{chr}{gene_symbol}{"start" or "end" or "ensg"}=star or end position or ENSG
 while(<GFF>){
 		if($_ =~ /^chr/){next;}

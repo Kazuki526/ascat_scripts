@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 my $ascat_dir="/Volumes/areca42TB/tcga/CNA";
-my @cancertype = qw(breast brain); 
+my @cancertype = qw(colorectal kidney lung);
 foreach my $cancertype (@cancertype){
 		print "#################################################### $cancertype ####################################################\n";
 		my $dir = "$ascat_dir/$cancertype/cel";

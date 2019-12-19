@@ -4,7 +4,7 @@ use strict;
 
 ############################################################################
 ## exanmple script
-## perl main.pl 2>&1|tee out.log
+## perl main.pl 2>&1|tee out38.log
 ###########################################################################
 
 my ($normjson,$tumorjson,$normmanifest,$tumormanifest,$token);
@@ -23,18 +23,8 @@ chomp ($normjson,$tumorjson,$normmanifest,$tumormanifest,$tokenfile);
 
 #$token="~/git/gdc_il/$tokenfile";
 print "check manifest & jsonfile & token files\n";
-#if(`ls|grep out\.log` !~ /./){die "not put out log to file\n redo by writing log to out.log\n";}
+#if(`ls|grep out38\.log` !~ /./){die "not put out log to file\n redo by writing log to out38.log\n";}
 
-=pod
-mkdir './norm';
-chdir './norm';
-system("~/gdc-client download -m $pwd/$normmanifest -t $token");
-mkdir '../tumor';
-chdir '../tumor';
-system("~/gdc-client download -m $pwd/$tumormanifest -t $token");
-chdir '../';
-if(`grep ERROR out.log` =~ /./){die "there are some ERROR by download cel files\n check out.log and redownload cel files\n";}
-=cut
 my $pwdn=`pwd`;chomp $pwdn;
 if($pwd ne $pwdn){die "ERROR stopped at line 23 main.pl\n";}
 
@@ -88,42 +78,12 @@ while(<TUMOR>){
 }
 close TUMOR;
 
-=pod
-open(NCL,">norm_cel_list.txt");
-open(TCL,">tumor_cel_list.txt");
-print NCL "cel_files\tfilename\tpatient\n";
-print TCL "cel_files\tfilename\tpatient\n";
-
-making output dir
-mkdir './ascat' or die"cant mkdir ascat";
-my($norm,$tumor,$normn,$tumorn)=("","",0,0);
-foreach my $patient (keys %response){
-		unless(exists $response{$patient}{'norm'}{file}){
-				$norm.="$patient\t";
-				$normn++;
-				next;
-		}
-		unless(exists $response{$patient}{'tumor'}{file}){
-				$tumor.="$patient\t";
-				$tumorn++;
-				next;
-		}
-#making output subdir
-		mkdir("./ascat/$patient") or die "can't make dir $patient\n" ;
-		print NCL "norm/$response{$patient}{norm}{uuid}/$response{$patient}{norm}{file}\t$response{$patient}{norm}{file}\t$patient\n";
-		print TCL "tumor/$response{$patient}{tumor}{uuid}/$response{$patient}{tumor}{file}\t$response{$patient}{tumor}{file}\t$patient\n";
-}
-print FILE "\nThere is no norm file of $normn patient\n$norm\n\nThere is no tumor file of $tumorn patient\n$tumor\n";
-close TCL;
-close NCL;
-close FILE;
-=cut
 
 system('sh ~/git/ascat_script/hg38_ascat/make_norm_gw6_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R norm_lrr_baf.txt norm_cel_list.txt $pwd");
+system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R norm_lrr_baf_hg38.txt norm_cel_list.txt $pwd");
 
 system('sh ~/git/ascat_script/hg38_ascat/make_tumor_lrrbaf.sh 2>&1 > /dev/null');
-system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R tumor_lrr_baf.txt tumor_cel_list.txt $pwd");
+system("Rscript --slave ~/git/ascat_script/hg19_ascat/split_lrr_baf.R tumor_lrr_baf_hg38.txt tumor_cel_list.txt $pwd");
 
 my %sex=();
 open(SEX,"file_sex");
@@ -159,7 +119,7 @@ foreach my $subdir(@subdir){
 }
 $pm->wait_all_children;
 
-system("perl ~/git/ascat_script/hg38_ascat/annotate_ascat110.pl");
+system("perl ~/git/ascat_script/hg38_ascat/annotate_ascat110_38.pl");
 
 print "perfectly done\n";
 exit;

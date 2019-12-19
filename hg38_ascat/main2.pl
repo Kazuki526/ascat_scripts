@@ -18,6 +18,7 @@ $normjson= "$ct"."_cna_norm.json";
 $tumorjson="$ct"."_cna_tumor.json";
 #system("cat ~/git/ascat_script/hg19_ascat/project_cna_norm.json|sed s/cancertype/$uc_ct/ >$normjson");
 #system("cat ~/git/ascat_script/hg19_ascat/project_cna_tumor.json|sed s/cancertype/$uc_ct/ >$tumorjson");
+#if($ct eq "laml"){system("cat ~/git/ascat_script/hg19_ascat/project_cna_tumor.json |sed s/cancertype/$uc_ct/ |sed s/Primary\\ Tumor/Primary\\ Blood\\ Derived\\ Cancer\\ -\\ Peripheral\\ Blood/ >$tumorjson");}
 
 $normmanifest= "gdc_manifest.$ct". "_norm_cel.tsv";
 $tumormanifest="gdc_manifest.$ct". "_tumor_cel.tsv";
@@ -41,22 +42,31 @@ my %col = &header2hash($dummy);
 if( (!defined $col{'cases.0.submitter_id'})||
 	(!defined $col{'cases.0.samples.0.sample_type'})||
 	(!defined $col{'file_name'})||
-	(!defined $col{'file_id'})){die "ERROR::there are some problem on response file. colum name chnaged?\n";}
+	(!defined $col{'file_id'})||
+	(!defined $col{'file_size'})||
+	(!defined $col{'md5sum'})||
+	(!defined $col{'state'})){die "ERROR::there are some problem on response file. colum name chnaged?\n";}
 while(<NORM>){
 		chomp;
 		my @line=split(/\t/,);
 		if(exists $response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{file}){
 				print FILE "$line[$col{'cases.0.submitter_id'}] heve 2 or more tumor files\t$line[$col{'cases.0.samples.0.sample_type'}], ";
-				print FILE "$response{$line[$col{'cases.0.submitter_id'}]}{tumor}{sampletype}\n";
+				print FILE "$response{$line[$col{'cases.0.submitter_id'}]}{norm}{sampletype}\n";
 				if($line[$col{'cases.0.samples.0.sample_type'}] eq "Blood Derived Normal"){
 						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'file'}=$line[$col{'file_name'}];
 						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'sampletype'}=$line[$col{'cases.0.samples.0.sample_type'}];
 						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'uuid'}=$line[$col{'file_id'}];
+						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'md5'}=$line[$col{'md5sum'}];
+						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'size'}=$line[$col{'file_size'}];
+						$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'state'}=$line[$col{'state'}];
 				}
 		}else{
 				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'file'}=$line[$col{'file_name'}];
 				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'sampletype'}=$line[$col{'cases.0.samples.0.sample_type'}];
 				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'uuid'}=$line[$col{'file_id'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'md5'}=$line[$col{'md5sum'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'size'}=$line[$col{'file_size'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'norm'}{'state'}=$line[$col{'state'}];
 		}
 }
 close NORM;
@@ -65,7 +75,10 @@ $dummy=<TUMOR>;chomp $dummy;
 if( (!defined $col{'cases.0.submitter_id'})||
 	(!defined $col{'cases.0.samples.0.sample_type'})||
 	(!defined $col{'file_name'})||
-	(!defined $col{'file_id'})){die "ERROR::there are some problem on response file. colum name chnaged?\n";}
+	(!defined $col{'file_id'})||
+	(!defined $col{'file_size'})||
+	(!defined $col{'md5sum'})||
+	(!defined $col{'state'})){die "ERROR::there are some problem on response file. colum name chnaged?\n";}
 while(<TUMOR>){
 		chomp;
 		my @line =split(/\t/,);
@@ -76,6 +89,9 @@ while(<TUMOR>){
 				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'file'}=$line[$col{'file_name'}];
 				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'sampletype'}=$line[$col{'cases.0.samples.0.sample_type'}];
 				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'uuid'}=$line[$col{'file_id'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'md5'}=$line[$col{'md5sum'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'size'}=$line[$col{'file_size'}];
+				$response{$line[$col{'cases.0.submitter_id'}]}{'tumor'}{'state'}=$line[$col{'state'}];
 		}
 }
 close TUMOR;
@@ -110,22 +126,24 @@ foreach my $subdir(@subdir){
 		}
 #fork start
 		$pm->start and next;
-		system("Rscript --slave ~/git/ascat_script/hg19_ascat/2sample_ascat.R $subdir $pwd $sex >/dev/null 2>&1");
 		print "doing $subdir ascat\n";
-		unlink "ascat/$subdir/normal.LogR.txt";
-		unlink "ascat/$subdir/normal.BAF.txt";
-		unlink "ascat/$subdir/tumor.LogR.txt";
-		unlink "ascat/$subdir/tumor.BAF.txt";
-		unlink "ascat/$subdir/$subdir.BAF.PDFed.txt";
-		unlink "ascat/$subdir/$subdir.LogR.PDFed.txt";
+		system("Rscript --slave ~/git/ascat_script/hg19_ascat/2sample_ascat.R $subdir $pwd $sex >/dev/null 2>&1");
+		if(-e ("ascat/$subdir/$subdir"."_ascat.tsv")){
+				unlink "ascat/$subdir/normal.LogR.txt";
+				unlink "ascat/$subdir/normal.BAF.txt";
+				unlink "ascat/$subdir/tumor.LogR.txt";
+				unlink "ascat/$subdir/tumor.BAF.txt";
+				unlink "ascat/$subdir/$subdir.BAF.PDFed.txt";
+				unlink "ascat/$subdir/$subdir.LogR.PDFed.txt";
+		}else{print "ERROR::$subdir cannot run ASCAT\n";}
 #fork end
 		$pm->finish;
 }
 $pm->wait_all_children;
 
-system("perl ~/git/ascat_script/hg38_ascat/annotate_ascat110_38.pl");
+system("perl ~/git/ascat_script/hg38_ascat/annotate_ascat110.pl");
 
-print "perfectly done $uc_ct ASCAT\n";
+print "perfectly done ascat\n";
 exit;
 
 sub header2hash ( $ ){

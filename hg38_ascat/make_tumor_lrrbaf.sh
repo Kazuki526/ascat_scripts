@@ -6,4 +6,4 @@
 
 #~/ascat/gw6/bin/generate_affy_geno_cluster.pl apt/birdseed.calls.txt apt/birdseed.confidences.txt apt/quant-norm.pm-only.med-polish.expr.summary.txt -locfile ~/ascat/gw6/lib/affygw6.hg19.pfb -sexfile file_sex -out gw6.genocluster
 
-~/ascat/gw6/bin/normalize_affy_geno_cluster.pl gw6.genocluster apt_tumor/quant-norm.pm-only.med-polish.expr.summary.txt -locfile ~/ascat/gw6/lib/affygw6.hg38.pfb -out tumor_lrr_baf.txt
+~/ascat/gw6/bin/normalize_affy_geno_cluster.pl gw6.genocluster apt_tumor/quant-norm.pm-only.med-polish.expr.summary.txt -locfile ~/ascat/gw6/lib/affygw6.hg38.pfb -out tumor_lrr_baf_hg38.txt
