@@ -1,0 +1,46 @@
+{
+    "filters":{
+        "op":"and",
+        "content":[
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.samples.sample_type",
+                    "value":"Primary Tumor"
+	            }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.project.project_id",
+                    "value":"TCGA-cancertype"
+                }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"files.experimental_strategy",
+                    "value":"Genotyping array"
+                }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.project.program.name",
+                    "value":"TCGA"
+                }
+            },
+			{
+                "op":"in",
+                "content":{
+                    "field":"files.data_format",
+                    "value":"CEL"
+                }
+            }
+        ]
+    },
+    "format":"tsv",
+    "fields":"file_id,file_name,cases.submitter_id,cases.samples.sample_type,cases.samples.submitter_id,file_size,md5sum,state",
+    "size":"2000"
+}
+

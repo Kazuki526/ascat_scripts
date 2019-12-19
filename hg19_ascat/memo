@@ -1,0 +1,5 @@
+main.pl がメインのスクリプト
+$> ~/ascat/script/main.pl norm.json tumor.json norm.manifest tumor.manifest token.txt
+と実行ディレクトリで実行する
+jsonの例は　brca_cna_tumor.jsonやbrca_cna_norm.jsonにある。
+token.txtはだいたい最新のものがgithubに上がっている。

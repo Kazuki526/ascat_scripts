@@ -1,0 +1,45 @@
+{
+    "filters":{
+        "op":"and",
+        "content":[
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.samples.sample_type",
+                    "value":"Primary Tumor"
+	            }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.project.primary_site",
+                    "value":"Breast"
+                }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"files.experimental_strategy",
+                    "value":"Genotyping array"
+                }
+            },
+            {
+                "op":"in",
+                "content":{
+                    "field":"cases.project.program.name",
+                    "value":"TCGA"
+                }
+            },
+			{
+                "op":"in",
+                "content":{
+                    "field":"files.data_format",
+                    "value":"CEL"
+                }
+            }
+        ]
+    },
+    "format":"tsv",
+    "fields":"file_id,file_name,cases.submitter_id,cases.case_id,data_category,data_type,cases.samples.tumor_descriptor,cases.samples.tissue_type,cases.samples.sample_type,cases.samples.submitter_id,cases.samples.sample_id,analysis.workflow_type,cases.project.project_id,cases.samples.portions.analytes.aliquots.aliquot_id,cases.samples.portions.analytes.aliquots.submitter_id",
+    "size":"10000"
+}
